@@ -7,12 +7,8 @@ type Test struct {
 	values   interface{}
 	expected bool
 }
-
 // for more information about generic params using interface{} see: https://go.dev/doc/tutorial/generics
-
 func TestCheckSorted(t *testing.T) {
- 
-		// add all the test cases need to be tested for multiple types
 	tests := []Test{
 		{name: "Sorted int32 slice", values: []int32{1, 2, 3, 4, 5}, expected: true},
 		{name: "Unsorted int32 slice", values: []int32{1, 3, 2}, expected: false},
@@ -22,7 +18,19 @@ func TestCheckSorted(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := CheckSorted(tc.values)
+			// dynamic type assertion
+			var got bool
+			switch v := tc.values.(type) {
+			case []int32:
+				got = CheckSorted(v)
+			case []float64:
+				got = CheckSorted(v)
+			case []string:
+				got = CheckSorted(v)
+			default:
+				t.Fatalf("unsupported type %T", v)
+			}
+
 			if got != tc.expected {
 				t.Errorf("got %t, want %t", got, tc.expected)
 			}
