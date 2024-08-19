@@ -49,6 +49,10 @@ func TestCheckSorted(t *testing.T) {
 			switch v := tc.values.(type) {
 			case []int32:
 				got = CheckSorted(v)
+			case []int64:
+				got = CheckSorted(v)
+			case []float32:
+				got = CheckSorted(v)
 			case []float64:
 				got = CheckSorted(v)
 			case []string:
